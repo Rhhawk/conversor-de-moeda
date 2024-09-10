@@ -1,7 +1,7 @@
 
 const convertButton = document.querySelector(".convert-button")
 
-function convertValues(){
+async function convertValues(){
 
     const currencySelect = document.querySelector(".currency-select")
 
@@ -13,36 +13,52 @@ function convertValues(){
 
     const currencyValueToConverted = document.querySelector("#currency-converted-value")
 
-    const dolarToReal = 5.42
-    const euroToReal = 5.92
-    const libraToReal = 7.05
-    const bitcoinToReal = 355471.61
+    //https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,GBP-BRL,BRL-USD,BRL-EUR,BRL-GBP,USD-EUR,USD-GBP,EUR-USD,EUR-GBP,GBP-USD,GBP-EUR,BTC-USD,BTC-EUR
+    
+    const data = await fetch("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,GBP-BRL,BRL-USD,BRL-EUR,BRL-GBP,USD-EUR,USD-GBP,EUR-USD,EUR-GBP,GBP-USD,GBP-EUR,BTC-USD,BTC-EUR").then( Response => Response.json())
+    
+    const data2 = { 
+        link1: await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json").then( Response => Response.json()),
+        link2: await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/brl.json").then( Response => Response.json()),
+        link3: await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/gbp.json").then( Response => Response.json()),
+        link4: await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json").then( Response => Response.json()),
+        link5: await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/btc.json").then( Response => Response.json()),
+    }
+    
+    console.log(data2)
+
+    const dolarToReal = data.USDBRL.high
+    const euroToReal = data.EURBRL.high
+    const libraToReal = data.GBPBRL.high
+    const bitcoinToReal = data.BTCBRL.high
     const realToReal = 1
 
-    const realToDolar = 0.1842503
-    const realToEuro = 0.1692391  
-    const realToLibra = 0.142201
-    const realToBitcoin = 0.0000029
+    const realToDolar = data.BRLUSD.high
+    const realToEuro = data.BRLEUR.high  
+    const realToLibra = data.BRLGBP.high
+    const realToBitcoin = data2.link2.brl.btc
 
 
-    const dolarToEuro = 1.0934
-    const dolarToLibra = 1.3007
-    const dolarToBitcoin = 64050.0
+    const dolarToEuro = data.USDEUR.high
+    const dolarToLibra = data.USDGBP.high
+    const dolarToBitcoin = data2.link4.usd.btc
 
-    const euroToDolar = 0.9145784
-    const libraToDolar = 0.7688168
-    const bitcoinToDolar = 0.000016
+    const euroToDolar = data.EURUSD.high
+    const libraToDolar = data.GBPUSD.high
+    const bitcoinToDolar = data.BTCUSD.high
 
-    const euroToLibra = 1.1898098
-    const euroToBitcoin = 58610.50
+    const euroToLibra = data.EURGBP.high
+    const euroToBitcoin = data2.link1.eur.btc
 
-    const libraToEuro = 0.8404705
-    const libraToBitcoin = 49057.26
+    const libraToEuro = data.GBPEUR.high
+    const libraToBitcoin = data2.link3.gbp.btc
 
-    const bitcoinToEuro = 0.000017
-    const bitcoinToLibra = 0.000020
+    const bitcoinToEuro = data.BTCEUR.high
+    const bitcoinToLibra = data2.link5.btc.gbp
+
+   
     
-
+    
     if (currencySelect.value == "dolar"){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("en-US", {
             style: "currency",
@@ -159,7 +175,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("de-DE", {
             style: "currency",
             currency: "EUR"
-        }).format(inputCurrencyValue/dolarToEuro)
+        }).format(inputCurrencyValue/euroToDolar)
 
     }
 
@@ -167,7 +183,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("gb-GB", {
             style: "currency",
             currency: "GBP"
-        }).format(inputCurrencyValue/dolarToLibra)
+        }).format(inputCurrencyValue/libraToDolar)
 
     }
 
@@ -175,7 +191,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("es-SV", {
             style: "currency",
             currency: "BTC"
-        }).format(inputCurrencyValue/dolarToBitcoin)
+        }).format(inputCurrencyValue/bitcoinToDolar)
 
     }
 
@@ -191,7 +207,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD"
-        }).format(inputCurrencyValue / euroToDolar)
+        }).format(inputCurrencyValue / dolarToEuro)
 
     }
 
@@ -199,7 +215,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("gb-GB", {
             style: "currency",
             currency: "GBP"
-        }).format(inputCurrencyValue / euroToLibra) 
+        }).format(inputCurrencyValue / libraToEuro) 
 
     }
 
@@ -207,7 +223,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("es-SV", {
             style: "currency",
             currency: "BTC"
-        }).format(inputCurrencyValue / euroToBitcoin) 
+        }).format(inputCurrencyValue / bitcoinToEuro) 
 
     }
 
@@ -215,7 +231,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD"
-        }).format(inputCurrencyValue / libraToDolar)
+        }).format(inputCurrencyValue / dolarToLibra)
 
     }
 
@@ -223,7 +239,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("es-SV", {
             style: "currency",
             currency: "BTC"
-        }).format(inputCurrencyValue / libraToBitcoin)
+        }).format(inputCurrencyValue / bitcoinToLibra)
 
     }
 
@@ -231,7 +247,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("de-DE", {
             style: "currency",
             currency: "EUR"
-        }).format(inputCurrencyValue / libraToEuro)
+        }).format(inputCurrencyValue / euroToLibra)
 
     }
 
@@ -239,7 +255,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD"
-        }).format(inputCurrencyValue / bitcoinToDolar)
+        }).format(inputCurrencyValue / dolarToBitcoin)
 
     }
 
@@ -247,7 +263,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("de-DE", {
             style: "currency",
             currency: "EUR"
-        }).format(inputCurrencyValue / bitcoinToEuro)
+        }).format(inputCurrencyValue / euroToBitcoin)
 
     }
 
@@ -255,7 +271,7 @@ function convertValues(){
         currencyValueToConverted.innerHTML = new Intl.NumberFormat("gb-GB", {
             style: "currency",
             currency: "GBP"
-        }).format(inputCurrencyValue / bitcoinToLibra)
+        }).format(inputCurrencyValue / libraToBitcoin)
 
     }
 
